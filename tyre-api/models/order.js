@@ -17,6 +17,12 @@ const OrderSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true }, // Total price
   status: { type: String, default: "Pending" }, // Order status
   orderDate: { type: Date, default: Date.now }, // Order date
+  contactDetails: {
+    name: { type: String, required: true }, // Contact name
+    phone: { type: String, required: true }, // Contact phone number
+    email: { type: String, required: true }, // Contact email address
+    address: { type: String, required: true }, // Contact address
+  }, // Contact details
 });
 
 module.exports = mongoose.model("Order", OrderSchema);

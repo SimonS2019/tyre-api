@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Create a new order
 router.post("/", async (req, res) => {
-  const { orderId, userId, products } = req.body;
+  const { orderId, userId, products, contactDetails } = req.body;
   try {
     let totalPrice = 0;
 
@@ -26,17 +26,20 @@ router.post("/", async (req, res) => {
       })
     );
 
-    const newOrder = new Order({
+    // Create a new order
+    const order = new Order({
       orderId,
       userId,
       products: productDetails,
       totalPrice,
+      contactDetails, // Include contact details
     });
 
-    await newOrder.save();
+    // Save the order to the database
+    const newOrder = await order.save();
     res.status(201).json(newOrder);
   } catch (err) {
-    res.status(500).json({ msg: "Server error", error: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
