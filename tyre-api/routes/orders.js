@@ -1,10 +1,11 @@
 const express = require("express");
 const Order = require("../models/order");
 const Product = require("../models/product");
+const authenticateJWT = require("../middlewares/authMiddleware"); // Adjust the path as necessary
 const router = express.Router();
 
 // Create a new order
-router.post("/", async (req, res) => {
+router.post("/", authenticateJWT, async (req, res) => {
   const { orderId, userId, products, contactDetails } = req.body;
   try {
     let totalPrice = 0;
@@ -40,6 +41,17 @@ router.post("/", async (req, res) => {
     res.status(201).json(newOrder);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+router.get("/", authenticateJWT, async (req, res) => {
+  try {
+    const orders = await Order.find({ userId: req.user.userId })
+      .populate("userId")
+      .populate("productId");
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
   }
 });
 
