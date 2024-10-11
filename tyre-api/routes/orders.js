@@ -6,7 +6,9 @@ const router = express.Router();
 
 // Create a new order
 router.post("/", authenticateJWT, async (req, res) => {
-  const { orderId, userId, products, contactDetails, shippingPrice } = req.body;
+  const { orderId, products, contactDetails, shippingPrice } = req.body;
+  const userId = req.user.userId; // Extract userId from authenticated user
+
   try {
     let totalPrice = 0;
 
