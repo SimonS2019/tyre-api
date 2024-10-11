@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
-  id: { type: Number, required: true, unique: true }, // 产品 ID
-  name: { type: String, required: true },              // 产品名称
-  price: { type: Number, required: true },             // 产品价格
-  quantity: { type: Number, required: true },          // 产品数量
-  status: { type: String, required: true },            // 库存状态
-  description: { type: String, required: true },       // 产品描述
-  imgaddress: { type: String, required: true },        // 图片地址
+  id: { type: Number, required: true, unique: true }, // This is the unique identifier for the product
+  name: { type: String, required: true },             // This is the name of the product
+  price: { type: Number, required: true },            // This is the price of the product
+  quantity: { type: Number, required: true },         // This is the quantity of the product in stock
+  status: { type: String, required: true },           // This is the status of the product (e.g., available, out of stock)
+  description: { type: String, required: true },      // This is the description of the product
+  imgaddress: { type: String, required: true },       // This is the URL address of the product image
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
