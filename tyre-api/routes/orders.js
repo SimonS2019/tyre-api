@@ -45,14 +45,13 @@ router.post("/", authenticateJWT, async (req, res) => {
 });
 
 router.get("/", authenticateJWT, async (req, res) => {
-  try {
-    const orders = await Order.find({ userId: req.user.userId })
-      .populate("userId")
-      .populate("productId");
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ msg: "Server error" });
-  }
-});
+    try {
+      const orders = await Order.find({ userId: req.user.userId })
+      res.json(orders);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      res.status(500).json({ msg: "Server error", error: err.message });
+    }
+  });
 
 module.exports = router;
