@@ -21,6 +21,7 @@ var usersRouter = require("./routes/users");
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const tiretypeRoutes = require("./routes/tiretypes"); // Add this line to import the new router
+const orderRoutes = require("./routes/orders");
 
 var app = express();
 
@@ -35,9 +36,6 @@ app.use("/users", usersRouter);
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/tiretypes", tiretypeRoutes); // Add this line to use the new router
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+app.use("/orders", orderRoutes);
 
 module.exports = app;
