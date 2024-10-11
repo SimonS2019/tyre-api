@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Create a new order
 router.post("/", authenticateJWT, async (req, res) => {
-  const { orderId, products, contactDetails, shippingPrice } = req.body;
+  const { products, contactDetails, shippingPrice } = req.body;
   const userId = req.user.userId; // Extract userId from authenticated user
 
   try {
@@ -32,7 +32,6 @@ router.post("/", authenticateJWT, async (req, res) => {
     totalPrice += shippingPrice;
     // Create a new order
     const order = new Order({
-      orderId,
       userId,
       products: productDetails,
       totalPrice,
