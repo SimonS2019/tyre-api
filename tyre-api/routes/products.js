@@ -3,10 +3,32 @@ const Product = require("../models/product");
 const router = express.Router();
 
 // get all products
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const products = await Product.find();
     res.json(products);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// get all products with pagination
+router.get("/", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page if not provided
+
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find().skip(skip).limit(limit);
+    const total = await Product.countDocuments();
+
+    res.json({
+      products,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    });
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
