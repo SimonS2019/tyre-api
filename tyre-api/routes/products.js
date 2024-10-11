@@ -1,7 +1,8 @@
 const express = require("express");
 const Product = require("../models/product");
 const router = express.Router();
-
+const authenticateJWT = require('../middlewares/authMiddleware');
+const authorizeRole = require('../middlewares/authorizeRole');
 // get all products
 router.get("/all", async (req, res) => {
   try {
@@ -58,7 +59,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // add new product single
-router.post("/addone", async (req, res) => {
+router.post("/addone",authenticateJWT, authorizeRole('admin'), async (req, res) => {
   const { id, name, price, quantity, status, description, imgaddress } =
     req.body;
   try {
@@ -80,7 +81,7 @@ router.post("/addone", async (req, res) => {
 });
 
 // add new products many
-router.post("/addmany", async (req, res) => {
+router.post("/addmany",authenticateJWT, authorizeRole('admin'), async (req, res) => {
   const products = req.body;
   if (!Array.isArray(products)) {
     return res
