@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Create a new order
 router.post("/", authenticateJWT, async (req, res) => {
-  const { orderId, userId, products, contactDetails } = req.body;
+  const { orderId, userId, products, contactDetails, shippingPrice } = req.body;
   try {
     let totalPrice = 0;
 
@@ -26,7 +26,8 @@ router.post("/", authenticateJWT, async (req, res) => {
         };
       })
     );
-
+    // Add shipping price to total price
+    totalPrice += shippingPrice;
     // Create a new order
     const order = new Order({
       orderId,
@@ -34,6 +35,7 @@ router.post("/", authenticateJWT, async (req, res) => {
       products: productDetails,
       totalPrice,
       contactDetails, // Include contact details
+      shippingPrice,
     });
 
     // Save the order to the database
@@ -45,13 +47,13 @@ router.post("/", authenticateJWT, async (req, res) => {
 });
 
 router.get("/", authenticateJWT, async (req, res) => {
-    try {
-      const orders = await Order.find({ userId: req.user.userId })
-      res.json(orders);
-    } catch (err) {
-      console.error("Error fetching orders:", err);
-      res.status(500).json({ msg: "Server error", error: err.message });
-    }
-  });
+  try {
+    const orders = await Order.find({ userId: req.user.userId });
+    res.json(orders);
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ msg: "Server error", error: err.message });
+  }
+});
 
 module.exports = router;
