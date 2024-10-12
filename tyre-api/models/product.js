@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
-  id: { type: Number, required: true, unique: true }, // This is the unique identifier for the product
   name: { type: String, required: true },             // This is the name of the product
   price: { type: Number, required: true },            // This is the price of the product
   quantity: { type: Number, required: true },         // This is the quantity of the product in stock
