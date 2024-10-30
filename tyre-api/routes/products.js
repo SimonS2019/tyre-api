@@ -13,29 +13,17 @@ const upload = multer({ storage: storage });
 router.get("/all", async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ msg: "Server error" });
-  }
-});
 
-// get all products with pagination
-router.get("/", async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page if not provided
-
-    const skip = (page - 1) * limit;
-
-    const products = await Product.find().skip(skip).limit(limit);
-    const total = await Product.countDocuments();
-
-    res.json({
-      products,
-      total,
-      page,
-      pages: Math.ceil(total / limit),
+    // Convert each product's image buffer to Base64
+    const productsWithBase64Images = products.map((product) => {
+      // Clone the product object and convert the image buffer to a Base64 string
+      return {
+        ...product.toObject(),
+        img: product.img ? product.img.toString("base64") : null,
+      };
     });
+
+    res.json(productsWithBase64Images);
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
@@ -44,12 +32,17 @@ router.get("/", async (req, res) => {
 // get product by id
 router.get("/:id", async (req, res) => {
   try {
-        console.log(req.params.id);
-
+    console.log(req.params.id);
     const product = await Product.findById(req.params.id);
-    
     if (!product) return res.status(404).json({ msg: "Product not found" });
-    res.json(product);
+
+    // Convert the image buffer to Base64
+    const productWithBase64Image = {
+      ...product.toObject(),
+      img: product.img ? product.img.toString("base64") : null, // Convert to Base64 if image exists
+    };
+
+    res.json(productWithBase64Image);
   } catch (err) {
     console.error(err); // Log the error for debugging
     res.status(500).json({ msg: "Server error, product cannot be found" });
