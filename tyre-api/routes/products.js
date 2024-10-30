@@ -75,41 +75,4 @@ router.post(
   }
 );
 
-// add new products many
-router.post(
-  "/addmany",
-  authenticateJWT,
-  authorizeRole("admin"),
-  async (req, res) => {
-    const products = req.body;
-    if (!Array.isArray(products)) {
-      return res
-        .status(400)
-        .json({ msg: "Request body must be an array of products" });
-    }
-
-    try {
-      const savedProducts = [];
-      for (const productData of products) {
-        const { name, price, quantity, status, description, imgaddress } =
-          productData;
-        const newProduct = new Product({
-          name,
-          price,
-          quantity,
-          status,
-          description,
-          imgaddress,
-        });
-        const savedProduct = await newProduct.save();
-        savedProducts.push(savedProduct);
-      }
-      res.status(201).json(savedProducts);
-    } catch (err) {
-      console.error(err); // Log the error for debugging
-      res.status(500).json({ msg: "Server error" });
-    }
-  }
-);
-
 module.exports = router;
