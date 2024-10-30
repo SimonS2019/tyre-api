@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Tyre API",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/tyre-api/bin/www",
+            "envFile": "${workspaceFolder}/tyre-api/.env",
+            "env": {
+                "NODE_ENV": "development"
+            }
+        }
+    ]
+}
