@@ -14,14 +14,12 @@ router.get("/all", async (req, res) => {
   try {
     const products = await Product.find();
 
-    // Convert each product's image buffer to Base64
-    const productsWithBase64Images = products.map((product) => {
-      // Clone the product object and convert the image buffer to a Base64 string
-      return {
-        ...product.toObject(),
-        img: product.img ? product.img.toString("base64") : null,
-      };
-    });
+    // Convert each product's image buffer to Base64 and include MIME type
+    const productsWithBase64Images = products.map((product) => ({
+      ...product.toObject(),
+      img: product.img ? product.img.toString("base64") : null, // Convert to Base64
+      imgType: product.imgType || "image/jpeg", // Default MIME type if not provided
+    }));
 
     res.json(productsWithBase64Images);
   } catch (err) {
@@ -36,10 +34,11 @@ router.get("/:id", async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ msg: "Product not found" });
 
-    // Convert the image buffer to Base64
+    // Convert the image buffer to Base64 and include MIME type
     const productWithBase64Image = {
       ...product.toObject(),
-      img: product.img ? product.img.toString("base64") : null, // Convert to Base64 if image exists
+      img: product.img ? product.img.toString("base64") : null,
+      imgType: product.imgType || "image/jpeg", // Default MIME type if not provided
     };
 
     res.json(productWithBase64Image);
@@ -58,6 +57,8 @@ router.post(
   async (req, res) => {
     const { name, price, quantity, description } = req.body;
     const img = req.file.buffer; // Get the image file buffer
+    const imgType = req.file.mimetype; // Get the MIME type of the image
+
     try {
       const newProduct = new Product({
         name,
@@ -65,6 +66,7 @@ router.post(
         quantity,
         description,
         img,
+        imgType, // Store MIME type
       });
       await newProduct.save();
       res.status(201).json(newProduct);
