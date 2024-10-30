@@ -15,7 +15,6 @@ const OrderSchema = new mongoose.Schema({
   ],
   shippingPrice: { type: Number, required: true }, // Shipping price
   totalPrice: { type: Number, required: true }, // Total price
-  status: { type: String, default: "Pending" }, // Order status
   orderDate: { type: Date, default: Date.now }, // Order date
   contactDetails: {
     name: { type: String, required: true }, // Contact name
