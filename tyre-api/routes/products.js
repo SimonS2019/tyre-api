@@ -77,6 +77,41 @@ router.post(
   }
 );
 
+// update product by id
+router.put(
+  "/:id",
+  authenticateJWT,
+  authorizeRole("admin"),
+  upload.single("img"),
+  async (req, res) => {
+    const { name, price, quantity, description } = req.body;
+    const img = req.file ? req.file.buffer : undefined; // Get the image file buffer if provided
+    const imgType = req.file ? req.file.mimetype : undefined; // Get the MIME type of the image if provided
+
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+          name,
+          price,
+          quantity,
+          description,
+          ...(img && { img }), // Only update img if provided
+          ...(imgType && { imgType }), // Only update imgType if provided
+        },
+        { new: true }
+      );
+
+      if (!updatedProduct) return res.status(404).json({ msg: "Product not found" });
+
+      res.json(updatedProduct);
+    } catch (err) {
+      console.error(err); // Log the error for debugging
+      res.status(500).json({ msg: "Server error, product cannot be updated" });
+    }
+  }
+);
+
 // delete product by id
 router.delete(
   "/:id",
