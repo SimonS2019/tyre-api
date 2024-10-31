@@ -77,4 +77,21 @@ router.post(
   }
 );
 
+// delete product by id
+router.delete(
+  "/:id",
+  authenticateJWT,
+  authorizeRole("admin"),
+  async (req, res) => {
+    try {
+      const product = await Product.findByIdAndDelete(req.params.id);
+      if (!product) return res.status(404).json({ msg: "Product not found" });
+      res.json({ msg: "Product deleted successfully" });
+    } catch (err) {
+      console.error(err); // Log the error for debugging
+      res.status(500).json({ msg: "Server error, product cannot be deleted" });
+    }
+  }
+);
+
 module.exports = router;
