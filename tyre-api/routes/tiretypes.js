@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 //     type: req.body.type,
 //     description: req.body.description,
 //     long_description: req.body.long_description,
-//     image_url: req.body.image_url,
+//     image_name: req.body.image_name,
 //   });
 
 //   try {
@@ -41,12 +41,12 @@ router.post("/addmany", async (req, res) => {
   try {
     const savedTiretypes = [];
     for (const tiretypeData of tiretypes) {
-      const { type, description, long_description, image_url } = tiretypeData;
+      const { type, description, long_description, image_name } = tiretypeData;
       const newTiretype = new Tiretype({
         type,
         description,
         long_description,
-        image_url,
+        image_name,
       });
       const savedTiretype = await newTiretype.save();
       savedTiretypes.push(savedTiretype);
