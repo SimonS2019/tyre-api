@@ -55,7 +55,7 @@ router.post(
   authorizeRole("admin"),
   upload.single("img"),
   async (req, res) => {
-    const { name, price, quantity, description } = req.body;
+    const { name, price, quantity, description, overview, specifications, performance_and_warranty } = req.body;
     const img = req.file.buffer; // Get the image file buffer
     const imgType = req.file.mimetype; // Get the MIME type of the image
 
@@ -67,6 +67,9 @@ router.post(
         description,
         img,
         imgType, // Store MIME type
+        overview,
+        specifications,
+        performance_and_warranty,
       });
       await newProduct.save();
       res.status(201).json(newProduct);
@@ -84,7 +87,7 @@ router.put(
   authorizeRole("admin"),
   upload.single("img"),
   async (req, res) => {
-    const { name, price, quantity, description } = req.body;
+    const { name, price, quantity, description, overview, specifications, performance_and_warranty } = req.body;
     const img = req.file ? req.file.buffer : undefined; // Get the image file buffer if provided
     const imgType = req.file ? req.file.mimetype : undefined; // Get the MIME type of the image if provided
 
@@ -96,6 +99,9 @@ router.put(
           price,
           quantity,
           description,
+          overview,
+          specifications,
+          performance_and_warranty,
           ...(img && { img }), // Only update img if provided
           ...(imgType && { imgType }), // Only update imgType if provided
         },
